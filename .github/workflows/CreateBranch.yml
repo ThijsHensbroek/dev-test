@@ -2,8 +2,7 @@
 name: Create branch when issue is Ready
 on:
   issues:
-    types:
-      - labeled
+    types:[labeled]
 jobs:
   create-branch:
     if: github.event.label.name == 'bug'

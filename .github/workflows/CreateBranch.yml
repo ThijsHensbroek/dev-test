@@ -1,30 +1,32 @@
----
-name: Create branch when issue is Ready
+name: 📌 Create branch when issue is Ready
+
 on:
   issues:
     types:
       - labeled
+
 jobs:
   create-branch:
     if: github.event.label.name == 'bug'
     runs-on: ubuntu-latest
     steps:
-      - name: Create branch from main
+      - name: Create branch from test
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          
-          script: >
+          script: |
             const issue = context.payload.issue;
             const title = issue.title;
             const issue_number = issue.number;
+
             const slug = title
               .toLowerCase()
-              .replace(/[^a-z0-9]+/g, '')
+              .replace(/[^a-z0-9]+/g, '-')
               .replace(/(^-|-$)/g, '');
 
             const branchName = `feature/${issue_number}-${slug}`;
-            const baseBranch = 'main'; // <== pas aan als jouw basis anders heet
+            const baseBranch = 'test';
+
             const baseRef = await github.rest.git.getRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -42,5 +44,5 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: issue_number,
-              body: `Automatische branch aangemaakt: \`${branchName}\` vanaf \`${baseBranch}\`.`,
+              body: `🔧 Automatische branch aangemaakt: \`${branchName}\` vanaf \`${baseBranch}\`.`,
             });

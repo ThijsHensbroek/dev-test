@@ -12,30 +12,23 @@ jobs:
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          
           script: >
             const issue = context.payload.issue;
-
             const title = issue.title;
-
             const issue_number = issue.number;
-
-
             const slug = title
               .toLowerCase()
               .replace(/[^a-z0-9]+/g, '')
               .replace(/(^-|-$)/g, '');
 
             const branchName = `feature/${issue_number}-${slug}`;
-
             const baseBranch = 'main'; // <== pas aan als jouw basis anders heet
-
-
             const baseRef = await github.rest.git.getRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: `heads/${baseBranch}`,
             });
-
 
             await github.rest.git.createRef({
               owner: context.repo.owner,
@@ -43,7 +36,6 @@ jobs:
               ref: `refs/heads/${branchName}`,
               sha: baseRef.data.object.sha,
             });
-
 
             await github.rest.issues.createComment({
               owner: context.repo.owner,

@@ -6,7 +6,7 @@ on:
       - labeled
 jobs:
   create-branch:
-    if: github.event.label.name == 'ReadyForDev'
+    if: github.event.label.name == 'bug'
     runs-on: ubuntu-latest
     steps:
       - name: Create branch from main
